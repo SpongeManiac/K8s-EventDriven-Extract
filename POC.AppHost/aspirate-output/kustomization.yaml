@@ -1,0 +1,10 @@
+resources:
+- rabbitmq
+- mqconsume
+- trigger
+- dashboard.yaml
+
+generatorOptions:
+  disableNameSuffixHash: true
+
+

@@ -1,0 +1,9 @@
+{
+  "inputPath": "aspirate-output",
+  "containerImageTags": [
+    "latest"
+  ],
+  "kubeContext": "docker-desktop",
+  "outputFormat": "docker",
+  "disableSecrets": true
+}
