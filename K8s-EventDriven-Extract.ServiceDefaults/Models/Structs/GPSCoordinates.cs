@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace POC.ServiceDefaults.Models.DataStructures
+namespace POC.ServiceDefaults.Models.Structs
 {
     public class GPSCoordinates
     {

@@ -1,4 +1,4 @@
-using EchoAPI.Controllers;
+using POC.ServiceDefaults.Models.Converters;
 using RabbitMQ.Client;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -8,8 +8,11 @@ builder.AddServiceDefaults();
 // Add services to the container.
 builder.AddRabbitMQClient("rabbitmq");
 
-// Add API Controllers
-builder.Services.AddControllers();
+// Add API Controllers & Custom Converters
+builder.Services.AddControllers().AddJsonOptions(opts =>
+{
+    opts.JsonSerializerOptions.Converters.Add(new ExtractFilterConverter());
+});
 
 // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
 builder.Services.AddOpenApi();
@@ -33,7 +36,7 @@ using (var channel = await connection!.CreateChannelAsync())
     var logger = app.Services.GetRequiredService<ILogger>();
     // Declare the queue asynchronously
     await channel.QueueDeclareAsync(
-        queue: "test",
+        queue: "create_extract",
         durable: true,
         exclusive: false,
         autoDelete: false,

@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace POC.ServiceDefaults.Models.Interfaces
 {
-    public interface ISensorMeasurement
+    public interface IMeasurement
     {
         public int MeasurementID { get; set; }
         public int SensorID { get; set; }

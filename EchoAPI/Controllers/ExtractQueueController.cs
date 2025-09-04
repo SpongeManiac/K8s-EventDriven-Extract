@@ -1,20 +1,22 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using POC.ServiceDefaults.Models.Structs;
 using RabbitMQ.Client;
 using RabbitMQ.Client.Events;
 using System.Text;
+using System.Text.Json;
 
 namespace EchoAPI.Controllers
 {
     [ApiController]
-    [Route("api/addmessage")]
-    public class TestQueueController : ControllerBase
+    [Route("api/extract")]
+    public class ExtractQueueController : ControllerBase
     {
-        private readonly ILogger<TestQueueController> _logger;
+        private readonly ILogger<ExtractQueueController> _logger;
         private readonly IConnection _mqConnection;
 
-        public TestQueueController(
-            ILogger<TestQueueController> logger,
+        public ExtractQueueController(
+            ILogger<ExtractQueueController> logger,
             IConnection connection
         )
         {
@@ -22,10 +24,10 @@ namespace EchoAPI.Controllers
             _mqConnection = connection;
         }
 
-        [HttpPost(Name = "AddMessage")]
+        [HttpPost(Name = "RequestExtract")]
         [Consumes("application/json")]
         public async Task<IActionResult> Post(
-            [FromBody] string message
+            [FromBody] ExtractRequest extractRequest
         )
         {
             try
@@ -33,7 +35,7 @@ namespace EchoAPI.Controllers
                 using (var channel = await _mqConnection.CreateChannelAsync())
                 {
                     // Send message to queue
-                    await channel.BasicPublishAsync(string.Empty, "test", body: Encoding.UTF8.GetBytes(message));
+                    await channel.BasicPublishAsync(string.Empty, "create_extract", body: Encoding.UTF8.GetBytes(JsonSerializer.Serialize(extractRequest)));
                 }
                 return StatusCode(StatusCodes.Status201Created);
             }
@@ -42,6 +44,5 @@ namespace EchoAPI.Controllers
                 return StatusCode(StatusCodes.Status503ServiceUnavailable);
             }
         }
-
     }
 }

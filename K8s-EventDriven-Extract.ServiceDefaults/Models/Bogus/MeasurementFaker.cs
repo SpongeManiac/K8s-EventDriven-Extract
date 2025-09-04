@@ -1,5 +1,6 @@
 ﻿using Bogus;
 using POC.ServiceDefaults.Models.Interfaces;
+using POC.ServiceDefaults.Models.Tables;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -46,7 +47,7 @@ namespace ServiceDefaults.Models.Bogus
         public double rainDepth { get; set; }
     }
 
-    public class MeasurementFaker : Faker<ISensorMeasurement>
+    public class MeasurementFaker : Faker<MeasurementDTO>
     {
         public int sensorID;
         public SensorType sensorType;
