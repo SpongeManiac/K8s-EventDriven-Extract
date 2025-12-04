@@ -13,6 +13,7 @@ using POC.ServiceDefaults.Models.Tables;
 using RabbitMQ.Client;
 using Azure.Core.Serialization;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging.Configuration;
 
 var builder = FunctionsApplication.CreateBuilder(args);
 
@@ -143,11 +144,17 @@ using (var channel = await connection!.CreateChannelAsync())
 
         logger.LogInformation("Test queue & DB is ready, running MQConsume.");
     }
-
+    catch(Supabase.Postgrest.Exceptions.PostgrestException ex) {
+        logger.LogError(ex, $"Postgresql error whil initializing DB:\n{ex.StatusCode}\n{ex.Source}\n{ex.Message}");
+        foreach(var key in ex.Data.Keys)
+        {
+            logger.LogCritical($"{key}:\t{ex.Data[key]}");
+        }
+    }
     catch (Exception ex)
     {
         // Unwrap exceptions
-        logger.LogError(ex, $"Could not initialize DB.\nInner Exception:\n{ex.InnerException}");
+        logger.LogError(ex, $"Unknown error while initializing db:\n{ex}\nInner Exception:\n{ex.InnerException}");
         var innerTmp = ex;
         while (innerTmp.InnerException != null) {
             logger.LogError(innerTmp.InnerException, $"Inner Exception of {innerTmp.GetType()}:\n{innerTmp.Message}");

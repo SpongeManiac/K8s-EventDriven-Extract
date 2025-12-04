@@ -1,12 +1,9 @@
 {
-  "projectPath": ".",
   "inputPath": "aspirate-output",
   "containerImageTags": [
     "latest"
   ],
-  "containerBuilder": "docker",
   "kubeContext": "docker-desktop",
-  "outputFormat": "kustomize",
-  "disableSecrets": true,
-  "processAllComponents": true
+  "outputFormat": "docker",
+  "disableSecrets": true
 }
